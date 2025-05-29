@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class CarSpawner : MonoBehaviour
@@ -21,6 +22,22 @@ public class CarSpawner : MonoBehaviour
     public List<CarLane> allLanes = new List<CarLane>();
     private Camera mainCam;
 
+    private PlayerControls controls; // ← 新增這個
+
+    void Awake()
+    {
+        controls = new PlayerControls();
+
+        // 當 SpawnCar 被按下時執行
+        controls.Player.SpawnCar.performed += ctx =>
+        {
+            TrySpawnCar();
+        };
+    }
+
+    void OnEnable() => controls.Enable();
+    void OnDisable() => controls.Disable();
+
     void Start()
     {
         mainCam = Camera.main;
@@ -33,7 +50,8 @@ public class CarSpawner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // 保留原本 Space 鍵
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             TrySpawnCar();
         }

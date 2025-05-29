@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{bb98917e-d65b-41f0-a0ca-c50756da3f0e}">
 		<property name="note">
 			<value>This is an example of a multi-layered ambience event using parameters, scatterer instruments, modulation, and automation.
@@ -83,6 +83,7 @@ https://wingless-seraph.net</value>
 			<destination>{02f0aff2-8730-4e15-b085-b1d4d7c7e444}</destination>
 			<destination>{281e7d99-d998-4f5a-95d7-73eeae93453b}</destination>
 			<destination>{25ef18c6-3733-4124-9e4b-779ec2f20d65}</destination>
+			<destination>{1cb606d8-9521-497c-a746-af483a247555}</destination>
 		</relationship>
 		<relationship name="banks">
 			<destination>{561cd480-bd2b-4c2e-b919-d775f9c4f409}</destination>
@@ -119,7 +120,8 @@ https://wingless-seraph.net</value>
 			<destination>{dd77dd69-69ce-4057-bdd6-dfcc1e919ecc}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{35ef2d41-ca9c-43bf-a5d2-7cfde9bf4cb4}</destination>
+			<destination>{f8305ef6-8cfc-419e-b4d9-68d89dbc363c}</destination>
+			<destination>{cc5062db-3149-45c2-96a3-9ea000a38c76}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{b66c94f7-9b98-4b03-a21b-67901c03c6cc}</destination>
@@ -150,7 +152,7 @@ https://wingless-seraph.net</value>
 	</object>
 	<object class="GroupTrack" id="{3fe5f2b8-98d7-480f-937c-f111c263ea0b}">
 		<relationship name="modules">
-			<destination>{d509d387-c2b9-42be-81f8-caf9658886f4}</destination>
+			<destination>{abfe16cc-0508-4c64-aa44-a16ee314f570}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{efe0a862-7cee-4d03-b348-a616b906c364}</destination>
@@ -186,9 +188,8 @@ https://wingless-seraph.net</value>
 	<object class="ParameterProxy" id="{02f0aff2-8730-4e15-b085-b1d4d7c7e444}">
 		<relationship name="modules">
 			<destination>{21b32596-5af4-4064-b294-07f5479e2ad1}</destination>
-			<destination>{35ef2d41-ca9c-43bf-a5d2-7cfde9bf4cb4}</destination>
-			<destination>{d509d387-c2b9-42be-81f8-caf9658886f4}</destination>
 			<destination>{ee99ed9f-9ea2-4be0-942c-852881c23d31}</destination>
+			<destination>{cc5062db-3149-45c2-96a3-9ea000a38c76}</destination>
 		</relationship>
 		<relationship name="preset">
 			<destination>{35dee4f7-9565-4215-8ca7-3eb446a2ab8c}</destination>
@@ -206,6 +207,15 @@ https://wingless-seraph.net</value>
 	<object class="ParameterProxy" id="{25ef18c6-3733-4124-9e4b-779ec2f20d65}">
 		<relationship name="preset">
 			<destination>{b8b3154f-b7b5-47d7-b7c6-a020b1f48e76}</destination>
+		</relationship>
+	</object>
+	<object class="ParameterProxy" id="{1cb606d8-9521-497c-a746-af483a247555}">
+		<relationship name="modules">
+			<destination>{f8305ef6-8cfc-419e-b4d9-68d89dbc363c}</destination>
+			<destination>{abfe16cc-0508-4c64-aa44-a16ee314f570}</destination>
+		</relationship>
+		<relationship name="preset">
+			<destination>{3064c69d-bc7c-4b51-8c8c-22d7b67e0ffc}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{871985fe-9de0-4a22-8e2f-6dbf6ec4d178}">
@@ -238,7 +248,27 @@ https://wingless-seraph.net</value>
 			<destination>{e2f3149e-3ef6-4330-8bd9-d27417008c7a}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{35ef2d41-ca9c-43bf-a5d2-7cfde9bf4cb4}">
+	<object class="SingleSound" id="{f8305ef6-8cfc-419e-b4d9-68d89dbc363c}">
+		<property name="start">
+			<value>0.01</value>
+		</property>
+		<property name="length">
+			<value>0.98999999999999999</value>
+		</property>
+		<property name="looping">
+			<value>true</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{054762ac-1677-4f3f-ba97-72ea701c4912}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{cc5062db-3149-45c2-96a3-9ea000a38c76}">
+		<property name="start">
+			<value>0.01</value>
+		</property>
+		<property name="length">
+			<value>0.98999999999999999</value>
+		</property>
 		<property name="looping">
 			<value>true</value>
 		</property>
@@ -379,7 +409,13 @@ https://wingless-seraph.net</value>
 			<destination>{871985fe-9de0-4a22-8e2f-6dbf6ec4d178}</destination>
 		</relationship>
 	</object>
-	<object class="SoundScatterer" id="{d509d387-c2b9-42be-81f8-caf9658886f4}">
+	<object class="SoundScatterer" id="{abfe16cc-0508-4c64-aa44-a16ee314f570}">
+		<property name="start">
+			<value>0.19</value>
+		</property>
+		<property name="length">
+			<value>0.80999999999999983</value>
+		</property>
 		<property name="polyphony">
 			<value>1</value>
 		</property>
@@ -402,7 +438,7 @@ https://wingless-seraph.net</value>
 			<value>-3.5</value>
 		</property>
 		<relationship name="sound">
-			<destination>{a28a5eb8-5ff8-41d7-9eae-ea4e1a89b2b1}</destination>
+			<destination>{74a1eede-1466-4fa2-9732-d95752924cc2}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{efe0a862-7cee-4d03-b348-a616b906c364}">
@@ -624,10 +660,10 @@ https://wingless-seraph.net</value>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{b387e5d2-c3cd-4ff5-9b75-2753a6c698ed}" />
-	<object class="MultiSound" id="{a28a5eb8-5ff8-41d7-9eae-ea4e1a89b2b1}">
+	<object class="MultiSound" id="{74a1eede-1466-4fa2-9732-d95752924cc2}">
 		<relationship name="sounds">
-			<destination>{3849cae4-5893-45ad-8edd-a9868d4dad39}</destination>
-			<destination>{cd001920-9a10-4ca9-91c6-673800965d7e}</destination>
+			<destination>{3a38b0b2-69e3-4587-99f1-2151a7d0b930}</destination>
+			<destination>{4754dd3d-8311-47e7-bd9e-7d03c5dd1d9b}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{62c16c56-fed0-4ffb-9e40-1453e42531ea}">
@@ -814,12 +850,12 @@ https://wingless-seraph.net</value>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{2506f267-a56d-487c-a2be-95276084bc2a}" />
-	<object class="SingleSound" id="{3849cae4-5893-45ad-8edd-a9868d4dad39}">
+	<object class="SingleSound" id="{3a38b0b2-69e3-4587-99f1-2151a7d0b930}">
 		<relationship name="audioFile">
 			<destination>{1108e948-0cf8-4a91-9a65-30e7b6a6b71f}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{cd001920-9a10-4ca9-91c6-673800965d7e}">
+	<object class="SingleSound" id="{4754dd3d-8311-47e7-bd9e-7d03c5dd1d9b}">
 		<relationship name="audioFile">
 			<destination>{d195eb01-f684-429b-a4ec-c58d7901d376}</destination>
 		</relationship>
@@ -943,7 +979,7 @@ https://wingless-seraph.net</value>
 			<value>1</value>
 		</property>
 		<property name="value">
-			<value>0</value>
+			<value>2.45000076</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{e2664a61-f1bb-40a1-9812-9db7605274af}">
@@ -951,7 +987,7 @@ https://wingless-seraph.net</value>
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-30</value>
+			<value>-26.4999981</value>
 		</property>
 		<property name="curveShape">
 			<value>0.5</value>

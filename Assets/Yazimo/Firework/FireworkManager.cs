@@ -1,46 +1,89 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using MidiJack;
+using System.Collections;
 
 public class FireworkManager : MonoBehaviour
 {
-    public GameObject fireworkPrefab; // 拖入煙火特效Prefab
-    public Transform player;          // 角色物件
-    public int knobIndex = 0;         // MIDI 控制按鈕 Index
-    public float spawnRadius = 3f;    // 煙火生成半徑
+    [Header("煙火效果")]
+    public GameObject fireworkPrefab;
+    public Transform player;
+    public float spawnRadius = 3f;
 
-    private float lastValue = 0f;
+    [Header("MIDI 設定")]
+    public int knobIndex = 0; // MIDI 控制鍵 index
+
+    [Header("音效")]
+    public AudioClip[] fireworkSounds;
+    public float soundDelay = 0.2f; // 音效延遲時間（秒）
+    private AudioSource audioSource;
+
+    [Header("Input System")]
+    public InputAction fireButton; // 要在 Inspector 綁定或程式啟用
+
+    private float lastMidiValue = 0f;
+
+    void Awake()
+    {
+        fireButton.Enable();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    void OnDestroy()
+    {
+        fireButton.Disable();
+    }
 
     void Update()
     {
-        float currentValue = MidiMaster.GetKnob(knobIndex); // 或 GetKey(knobIndex)
-        
-        if (lastValue < 0.5f && currentValue >= 0.5f)
+        // MIDI 控制
+        float currentMidiValue = MidiMaster.GetKnob(knobIndex);
+        if (lastMidiValue < 0.5f && currentMidiValue >= 0.5f)
         {
             SpawnFirework();
         }
+        lastMidiValue = currentMidiValue;
 
-        lastValue = currentValue;
+        // Input System 控制
+        if (fireButton.WasPressedThisFrame())
+        {
+            SpawnFirework();
+        }
     }
 
     void SpawnFirework()
-{
-    Vector3 behindDirection = -player.forward;
-    Vector3 randomOffset = new Vector3(
-        Random.Range(-1f, 1f),
-        Random.Range(0.5f, 2f),
-        Random.Range(0.5f, 1.5f)
-    );
-    Vector3 spawnPos = player.position + behindDirection * spawnRadius + randomOffset;
+    {
+        Vector3 behindDirection = -player.forward;
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(0.5f, 2f),
+            Random.Range(0.5f, 1.5f)
+        );
+        Vector3 spawnPos = player.position + behindDirection * spawnRadius + randomOffset;
 
-    // 發射方向：以「大致往上」為主，加一點隨機偏移
-    Vector3 fireDirection = Vector3.up + new Vector3(
-        Random.Range(-0.3f, 0.3f),
-        0,
-        Random.Range(-0.3f, 0.3f)
-    );
+        Vector3 fireDirection = Vector3.up + new Vector3(
+            Random.Range(-0.3f, 0.3f),
+            0,
+            Random.Range(-0.3f, 0.3f)
+        );
 
-    Quaternion fireRotation = Quaternion.LookRotation(fireDirection.normalized);
+        Quaternion fireRotation = Quaternion.LookRotation(fireDirection.normalized);
+        Instantiate(fireworkPrefab, spawnPos, fireRotation);
 
-    Instantiate(fireworkPrefab, spawnPos, fireRotation);
-}
+        if (fireworkSounds.Length > 0)
+        {
+            StartCoroutine(PlaySoundDelayed(soundDelay));
+        }
+    }
+
+    IEnumerator PlaySoundDelayed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        AudioClip clip = fireworkSounds[Random.Range(0, fireworkSounds.Length)];
+        audioSource.PlayOneShot(clip);
+    }
 }
