@@ -3,40 +3,50 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;
-    public Vector3 offset = new Vector3(0, 5, -8); // 預設距離（可被覆蓋）
+    public Vector3 offset = new Vector3(0, 5, -8);
     public float followSpeed = 5f;
 
     private bool canFollow = false;
-    private bool justEnabledFollow = false;
+    private bool isTransitioning = false;
+
+    private Vector3 velocity = Vector3.zero;
+    private Vector3 currentOffset;
 
     /// <summary>
-    /// 開啟攝影機跟隨模式（動畫結束後呼叫）
+    /// 啟用跟隨攝影機，使用更平滑的滑動過渡
     /// </summary>
-    public void EnableFollow()
+    public void EnableFollow(bool smooth = true)
     {
-        Debug.Log("Camera Follow 啟用，Offset: " + offset);
         canFollow = true;
-        justEnabledFollow = true; // 下一幀立即對位
+        currentOffset = offset;
+
+        if (smooth && target != null)
+        {
+            isTransitioning = true;
+        }
+        else
+        {
+            transform.position = target.position + offset;
+            isTransitioning = false;
+        }
     }
 
     void LateUpdate()
     {
         if (!canFollow || target == null) return;
 
-        Vector3 desiredPos = target.position + offset;
+        Vector3 desiredPosition = target.position + offset;
 
-        if (justEnabledFollow)
+        if (isTransitioning)
         {
-            // 第一幀直接定位，避免跳動
-            transform.position = desiredPos;
-            justEnabledFollow = false;
+            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, 0.6f);
+
+            if (Vector3.Distance(transform.position, desiredPosition) < 0.05f)
+                isTransitioning = false;  // 過渡完成
         }
         else
         {
-            // 後續平滑跟隨
-            transform.position = Vector3.Lerp(transform.position, desiredPos, Time.deltaTime * followSpeed);
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * followSpeed);
         }
-
-        
     }
 }

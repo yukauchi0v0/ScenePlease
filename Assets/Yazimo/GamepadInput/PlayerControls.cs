@@ -116,6 +116,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchView"",
+                    ""type"": ""Button"",
+                    ""id"": ""3b745aef-d0f8-4f93-88ec-b3e746712209"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -272,6 +281,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""FireButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""57e5beee-91f6-42f6-a24f-3768b18574ac"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -290,6 +310,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_SliderToggle = m_Player.FindAction("SliderToggle", throwIfNotFound: true);
         m_Player_SpawnCar = m_Player.FindAction("SpawnCar", throwIfNotFound: true);
         m_Player_FireButton = m_Player.FindAction("FireButton", throwIfNotFound: true);
+        m_Player_SwitchView = m_Player.FindAction("SwitchView", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -366,6 +387,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SliderToggle;
     private readonly InputAction m_Player_SpawnCar;
     private readonly InputAction m_Player_FireButton;
+    private readonly InputAction m_Player_SwitchView;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -380,6 +402,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @SliderToggle => m_Wrapper.m_Player_SliderToggle;
         public InputAction @SpawnCar => m_Wrapper.m_Player_SpawnCar;
         public InputAction @FireButton => m_Wrapper.m_Player_FireButton;
+        public InputAction @SwitchView => m_Wrapper.m_Player_SwitchView;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -419,6 +442,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @FireButton.started += instance.OnFireButton;
             @FireButton.performed += instance.OnFireButton;
             @FireButton.canceled += instance.OnFireButton;
+            @SwitchView.started += instance.OnSwitchView;
+            @SwitchView.performed += instance.OnSwitchView;
+            @SwitchView.canceled += instance.OnSwitchView;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -453,6 +479,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @FireButton.started -= instance.OnFireButton;
             @FireButton.performed -= instance.OnFireButton;
             @FireButton.canceled -= instance.OnFireButton;
+            @SwitchView.started -= instance.OnSwitchView;
+            @SwitchView.performed -= instance.OnSwitchView;
+            @SwitchView.canceled -= instance.OnSwitchView;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -482,5 +511,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnSliderToggle(InputAction.CallbackContext context);
         void OnSpawnCar(InputAction.CallbackContext context);
         void OnFireButton(InputAction.CallbackContext context);
+        void OnSwitchView(InputAction.CallbackContext context);
     }
 }
