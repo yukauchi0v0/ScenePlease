@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("基本移動速度")]
-    public float normalSpeed = 5f;
-    public float sprintSpeed = 10f;
+    public float minSpeed = 3f;
+    public float maxSpeed = 8f;
     public float acceleration = 5f;
 
     [Header("初始化位置")]
@@ -15,9 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private PlayerControls controls;
     private Vector2 gamepadMoveInput = Vector2.zero;
     private float gamepadVerticalInput = 0f;
-    private bool isGamepadSprinting = false;
 
-    public bool isMovementEnabled = true;  // 新增：允許控制角色移動與否（由 ControlSwitcher 控制）
+    public bool isMovementEnabled = true;
 
     void Awake()
     {
@@ -28,30 +27,39 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.VerticalMove.performed += ctx => gamepadVerticalInput = ctx.ReadValue<float>();
         controls.Player.VerticalMove.canceled += ctx => gamepadVerticalInput = 0f;
-
-        controls.Player.Sprint.performed += ctx => isGamepadSprinting = true;
-        controls.Player.Sprint.canceled += ctx => isGamepadSprinting = false;
     }
 
     void OnEnable() => controls.Enable();
     void OnDisable() => controls.Disable();
 
-    void Start() => currentSpeed = normalSpeed;
+    void Start() => currentSpeed = minSpeed;
 
     void Update()
     {
-        if (!isMovementEnabled) return;  // ✅ 角色移動禁用
+        if (!isMovementEnabled) return;
 
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || isGamepadSprinting;
-        float targetSpeed = isSprinting ? sprintSpeed : normalSpeed;
+        // 鍵盤加速（Shift）
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        float keyboardTargetSpeed = isSprinting ? maxSpeed : minSpeed;
+
+        // 計算輸入強度（左搖桿 + 右搖桿Y）
+        float gamepadInputMagnitude = new Vector3(gamepadMoveInput.x, gamepadVerticalInput, gamepadMoveInput.y).magnitude;
+        float gamepadTargetSpeed = Mathf.Lerp(minSpeed, maxSpeed, gamepadInputMagnitude);
+
+        // 最終目標速度：依照是否為手柄輸入
+        float targetSpeed = (Gamepad.current != null) ? gamepadTargetSpeed : keyboardTargetSpeed;
+
+        // 平滑加速
         currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * acceleration);
 
+        // 鍵盤輸入
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         float y = 0f;
         if (Input.GetKey(KeyCode.R)) y = 1f;
         if (Input.GetKey(KeyCode.F)) y = -1f;
 
+        // 合併輸入
         Vector3 moveDir = new Vector3(
             h + gamepadMoveInput.x,
             y + gamepadVerticalInput,

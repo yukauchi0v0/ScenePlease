@@ -1,17 +1,17 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using FMODUnity;
 using FMOD.Studio;
-using MidiJack;
 
 public class FMOD_MasterController : MonoBehaviour
 {
     [Header("=== 雨聲控制 ===")]
     public StudioEventEmitter rainEmitter;
-    public int rainKnobIndex = 0;
+    public InputAction rainKnob; // ⬅ 改用 Input System
 
     [Header("=== 風聲控制 ===")]
     public StudioEventEmitter windEmitter;
-    public int windKnobIndex = 1;
+    public InputAction windKnob; // ⬅ 改用 Input System
 
     [Header("=== 車流控制 ===")]
     public EventReference carAmbienceEvent;
@@ -20,8 +20,8 @@ public class FMOD_MasterController : MonoBehaviour
 
     [Header("=== 高度控制風聲 ===")]
     public Transform playerTransform;
-    public float minHeight = 30f;   // 地面高度
-    public float maxHeight = 100f;  // 天空島高度
+    public float minHeight = 30f;
+    public float maxHeight = 100f;
     public float manualHoldTime = 2f;
 
     private float lastRain = -1f;
@@ -29,13 +29,22 @@ public class FMOD_MasterController : MonoBehaviour
     private float currentDensity = 0f;
     private EventInstance carAmbienceInstance;
 
-    private float windAutoValue = 0f;
-    private float windManualOverride = -1f; // -1 = 沒有手動控制
+    private float windManualOverride = -1f;
     private float manualTimer = 0f;
     private bool hasTouchedWindKnob = false;
     private bool hasInitializedWind = false;
 
+    void OnEnable()
+    {
+        rainKnob.Enable();
+        windKnob.Enable();
+    }
 
+    void OnDisable()
+    {
+        rainKnob.Disable();
+        windKnob.Disable();
+    }
 
     void Start()
     {
@@ -60,7 +69,7 @@ public class FMOD_MasterController : MonoBehaviour
     {
         if (rainEmitter == null) return;
 
-        float current = MidiMaster.GetKnob(rainKnobIndex);
+        float current = rainKnob.ReadValue<float>();
         if (Mathf.Abs(current - lastRain) > 0.001f && rainEmitter.EventInstance.isValid())
         {
             rainEmitter.EventInstance.setParameterByName("Rain", current);
@@ -68,70 +77,65 @@ public class FMOD_MasterController : MonoBehaviour
         }
     }
 
-   void UpdateWindControl()
-{
-    if (windEmitter == null || playerTransform == null) return;
-
-    float current = MidiMaster.GetKnob(windKnobIndex);
-
-    // 第一次初始化：記錄初始值，不判斷為“使用者操作”
-    if (!hasInitializedWind)
+    void UpdateWindControl()
     {
-        lastWind = current;
-        hasInitializedWind = true;
-    }
+        if (windEmitter == null || playerTransform == null) return;
 
-    bool knobMoved = Mathf.Abs(current - lastWind) > 0.001f;
-    float y = playerTransform.position.y;
-    float autoValue = Mathf.Clamp01(Mathf.InverseLerp(minHeight, maxHeight, y));
-    float finalValue;
+        float current = windKnob.ReadValue<float>();
 
-    if (knobMoved)
-    {
-        hasTouchedWindKnob = true;
-        lastWind = current;
-
-        if (current <= 0.01f)
+        if (!hasInitializedWind)
         {
-            windManualOverride = 0f;
-            manualTimer = -1f;
+            lastWind = current;
+            hasInitializedWind = true;
+        }
+
+        bool knobMoved = Mathf.Abs(current - lastWind) > 0.001f;
+        float y = playerTransform.position.y;
+        float autoValue = Mathf.Clamp01(Mathf.InverseLerp(minHeight, maxHeight, y));
+        float finalValue;
+
+        if (knobMoved)
+        {
+            hasTouchedWindKnob = true;
+            lastWind = current;
+
+            if (current <= 0.01f)
+            {
+                windManualOverride = 0f;
+                manualTimer = -1f;
+            }
+            else
+            {
+                windManualOverride = current;
+                manualTimer = 0f;
+            }
+        }
+
+        if (!hasTouchedWindKnob)
+        {
+            finalValue = autoValue;
+        }
+        else if (manualTimer < 0f)
+        {
+            finalValue = 0f;
         }
         else
         {
-            windManualOverride = current;
-            manualTimer = 0f;
+            finalValue = Mathf.Lerp(windManualOverride, autoValue, manualTimer / manualHoldTime);
+            manualTimer += Time.deltaTime;
+
+            if (manualTimer >= manualHoldTime)
+            {
+                windManualOverride = -1f;
+                hasTouchedWindKnob = false;
+            }
         }
-    }
 
-    if (!hasTouchedWindKnob)
-    {
-        finalValue = autoValue;
-    }
-    else if (manualTimer < 0f)
-    {
-        finalValue = 0f;
-    }
-    else
-    {
-        finalValue = Mathf.Lerp(windManualOverride, autoValue, manualTimer / manualHoldTime);
-        manualTimer += Time.deltaTime;
-
-        if (manualTimer >= manualHoldTime)
+        if (windEmitter.EventInstance.isValid())
         {
-            windManualOverride = -1f;
-            hasTouchedWindKnob = false;
+            windEmitter.EventInstance.setParameterByName("Wind", finalValue);
         }
     }
-
-    if (windEmitter.EventInstance.isValid())
-    {
-        windEmitter.EventInstance.setParameterByName("Wind", finalValue);
-    }
-}
-
-
-
-
 
     void UpdateCarDensity()
     {

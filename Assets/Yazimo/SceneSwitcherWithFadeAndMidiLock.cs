@@ -1,5 +1,5 @@
 using UnityEngine;
-using MidiJack;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -11,10 +11,10 @@ public class SceneSwitcherStableOptimized : MonoBehaviour
     public Transform seaPosition;
 
     public Image fadeImage;
-    public int knobIndex = 0;
     public float transitionDuration = 2f;
 
     private bool isTransitioning = false;
+    private bool hasStarted = false;
 
     private enum Region { Sea, City, Sky }
     private Region currentRegion = Region.City;
@@ -25,50 +25,91 @@ public class SceneSwitcherStableOptimized : MonoBehaviour
     public float cityMax = 0.65f;
     public float skyMin = 0.7f;
 
-    [Header("MIDI 按鍵通道編號")]
-    public int seaButtonIndex = 0;
-    public int cityButtonIndex = 1;
-    public int skyButtonIndex = 2;
+    [Header("Input System Actions")]
+    public InputAction regionSlider;
+    public InputAction goSeaButton;
+    public InputAction goCityButton;
+    public InputAction goSkyButton;
+
+    private float lastKnobValue = -1f;
+    private float knobThreshold = 0.01f;
+    private bool sliderHasMoved = false;
+
+    void OnEnable()
+    {
+        regionSlider.Enable();
+        goSeaButton.Enable();
+        goCityButton.Enable();
+        goSkyButton.Enable();
+    }
+
+    void OnDisable()
+    {
+        regionSlider.Disable();
+        goSeaButton.Disable();
+        goCityButton.Disable();
+        goSkyButton.Disable();
+    }
 
     void Start()
     {
-        if (fadeImage != null)
-            fadeImage.color = new Color(0, 0, 0, 0);
+        // ❌ 不要轉場，不要黑幕，不要移動角色位置
+        // ✅ 只設為當前區域（不動角色）
+        float knobValue = regionSlider.ReadValue<float>();
+        if (knobValue <= seaMax)
+            currentRegion = Region.Sea;
+        else if (knobValue >= skyMin)
+            currentRegion = Region.Sky;
+        else if (knobValue >= cityMin && knobValue <= cityMax)
+            currentRegion = Region.City;
+
+        lastKnobValue = knobValue;
+        if (fadeImage != null) fadeImage.color = new Color(0, 0, 0, 0);
+        hasStarted = true;
     }
 
     void Update()
     {
-        if (isTransitioning) return;
+        if (!hasStarted || isTransitioning) return;
 
-        // ✅ 按鈕觸發優先判斷
-        if (MidiMaster.GetKeyDown(seaButtonIndex))
+        // ✅ 按鍵優先
+        if (goSeaButton.WasPressedThisFrame())
         {
             TrySwitchRegion(Region.Sea);
             return;
         }
-        else if (MidiMaster.GetKeyDown(cityButtonIndex))
+        if (goCityButton.WasPressedThisFrame())
         {
             TrySwitchRegion(Region.City);
             return;
         }
-        else if (MidiMaster.GetKeyDown(skyButtonIndex))
+        if (goSkyButton.WasPressedThisFrame())
         {
             TrySwitchRegion(Region.Sky);
             return;
         }
 
-        // ✅ 滑桿判斷（原本邏輯保留）
-        float knobValue = MidiMaster.GetKnob(knobIndex, 0.5f);
-        Region targetRegion = currentRegion;
+        // ✅ 滑桿只有第一次動才會啟用切換功能
+        float knobValue = regionSlider.ReadValue<float>();
+        if (!sliderHasMoved && Mathf.Abs(knobValue - lastKnobValue) > knobThreshold)
+        {
+            sliderHasMoved = true;
+        }
 
-        if (knobValue <= seaMax)
-            targetRegion = Region.Sea;
-        else if (knobValue >= skyMin)
-            targetRegion = Region.Sky;
-        else if (knobValue >= cityMin && knobValue <= cityMax)
-            targetRegion = Region.City;
+        if (sliderHasMoved && Mathf.Abs(knobValue - lastKnobValue) > knobThreshold)
+        {
+            lastKnobValue = knobValue;
 
-        TrySwitchRegion(targetRegion);
+            Region targetRegion = currentRegion;
+            if (knobValue <= seaMax)
+                targetRegion = Region.Sea;
+            else if (knobValue >= skyMin)
+                targetRegion = Region.Sky;
+            else if (knobValue >= cityMin && knobValue <= cityMax)
+                targetRegion = Region.City;
+
+            TrySwitchRegion(targetRegion);
+        }
     }
 
     void TrySwitchRegion(Region targetRegion)
@@ -94,6 +135,7 @@ public class SceneSwitcherStableOptimized : MonoBehaviour
     {
         isTransitioning = true;
 
+        // ✅ 漸變黑幕進入
         if (fadeImage != null)
         {
             float t = 0f;
@@ -122,6 +164,7 @@ public class SceneSwitcherStableOptimized : MonoBehaviour
 
         characterTarget.position = endPos;
 
+        // ✅ 漸變回來
         if (fadeImage != null)
         {
             float t = 1f;

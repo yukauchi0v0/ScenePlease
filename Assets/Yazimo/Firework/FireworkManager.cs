@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using MidiJack;
 using System.Collections;
 
 public class FireworkManager : MonoBehaviour
@@ -10,22 +9,23 @@ public class FireworkManager : MonoBehaviour
     public Transform player;
     public float spawnRadius = 3f;
 
-    [Header("MIDI 設定")]
-    public int knobIndex = 0; // MIDI 控制鍵 index
+    [Header("Input System MIDI 旋鈕控制")]
+    public InputAction midiKnob; // 綁定 <MidiDevice>/control*/value
+    private float lastMidiValue = 0f;
+
+    [Header("Input System 發射鍵")]
+    public InputAction fireButton; // 綁定手柄或鍵盤按鍵
 
     [Header("音效")]
     public AudioClip[] fireworkSounds;
-    public float soundDelay = 0.2f; // 音效延遲時間（秒）
+    public float soundDelay = 0.2f;
     private AudioSource audioSource;
-
-    [Header("Input System")]
-    public InputAction fireButton; // 要在 Inspector 綁定或程式啟用
-
-    private float lastMidiValue = 0f;
 
     void Awake()
     {
+        midiKnob.Enable();
         fireButton.Enable();
+
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
@@ -35,20 +35,21 @@ public class FireworkManager : MonoBehaviour
 
     void OnDestroy()
     {
+        midiKnob.Disable();
         fireButton.Disable();
     }
 
     void Update()
     {
-        // MIDI 控制
-        float currentMidiValue = MidiMaster.GetKnob(knobIndex);
+        // MIDI 滑桿控制
+        float currentMidiValue = midiKnob.ReadValue<float>();
         if (lastMidiValue < 0.5f && currentMidiValue >= 0.5f)
         {
             SpawnFirework();
         }
         lastMidiValue = currentMidiValue;
 
-        // Input System 控制
+        // 普通按鍵或手柄控制
         if (fireButton.WasPressedThisFrame())
         {
             SpawnFirework();

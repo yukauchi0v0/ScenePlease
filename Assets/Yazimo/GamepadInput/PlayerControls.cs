@@ -125,6 +125,96 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MusicKnob"",
+                    ""type"": ""Value"",
+                    ""id"": ""4edbe6fa-5e12-450c-8312-138aea481639"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RainSlider"",
+                    ""type"": ""Value"",
+                    ""id"": ""2b61d2da-e199-4c4d-8110-8b8d1007e3a7"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RainKnob"",
+                    ""type"": ""Value"",
+                    ""id"": ""e6797839-638e-46fc-831f-c95f65f955c6"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""WindKnob"",
+                    ""type"": ""Value"",
+                    ""id"": ""2029e3f1-b5a1-4038-b400-16ac68d3a00d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RegionSlider"",
+                    ""type"": ""Value"",
+                    ""id"": ""0fc44b3b-61d3-4b13-9074-ee797a0534ff"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GoSea"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""4abb10c1-496d-41dd-934c-fae4820b0ffb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GoCity"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ba5b83a6-f354-49bf-81b0-3b5f700a5b1c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GoSky"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""757180e3-6c75-4bbb-b10b-06eb314ae417"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BubbleKnob"",
+                    ""type"": ""Value"",
+                    ""id"": ""fe2fc3a2-7102-4450-bea9-9687152dfdba"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""midiKnob"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ea8e2e5f-31e1-4205-ac2c-61f27ca94c39"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -292,6 +382,116 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchView"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ce8ab02-475d-4020-8cff-c4fc8981bb15"",
+                    ""path"": ""<MidiDevice>/control017"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MusicKnob"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f31b299d-570b-4cbf-99d9-524c02b20bfb"",
+                    ""path"": ""<MidiDevice>/control001"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RainSlider"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5022896a-0cda-41ce-b54b-8e7b8ff7737b"",
+                    ""path"": ""<MidiDevice>/control001"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RainKnob"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daf89b1b-eb1c-47be-8e16-d183a3759638"",
+                    ""path"": ""<MidiDevice>/control002"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WindKnob"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b635baf-08c9-4544-b895-79726918d5c0"",
+                    ""path"": ""<MidiDevice>/control007"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RegionSlider"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2d77723-a279-4cae-93ee-6225e8b0f25a"",
+                    ""path"": ""<MidiDevice>/control071"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GoSea"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d212f73-41a6-4bba-9271-c70fe1edd160"",
+                    ""path"": ""<MidiDevice>/control055"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GoCity"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f02468e8-7892-40bb-b8fd-b9355f0858be"",
+                    ""path"": ""<MidiDevice>/control039"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GoSky"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46a8076b-43f1-4836-9ac8-da43c5427b09"",
+                    ""path"": ""<MidiDevice>/control003"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BubbleKnob"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35fc54b8-fb7f-4fff-8ade-bf324b26e305"",
+                    ""path"": ""<MidiDevice>/control045"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""midiKnob"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -311,6 +511,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_SpawnCar = m_Player.FindAction("SpawnCar", throwIfNotFound: true);
         m_Player_FireButton = m_Player.FindAction("FireButton", throwIfNotFound: true);
         m_Player_SwitchView = m_Player.FindAction("SwitchView", throwIfNotFound: true);
+        m_Player_MusicKnob = m_Player.FindAction("MusicKnob", throwIfNotFound: true);
+        m_Player_RainSlider = m_Player.FindAction("RainSlider", throwIfNotFound: true);
+        m_Player_RainKnob = m_Player.FindAction("RainKnob", throwIfNotFound: true);
+        m_Player_WindKnob = m_Player.FindAction("WindKnob", throwIfNotFound: true);
+        m_Player_RegionSlider = m_Player.FindAction("RegionSlider", throwIfNotFound: true);
+        m_Player_GoSea = m_Player.FindAction("GoSea", throwIfNotFound: true);
+        m_Player_GoCity = m_Player.FindAction("GoCity", throwIfNotFound: true);
+        m_Player_GoSky = m_Player.FindAction("GoSky", throwIfNotFound: true);
+        m_Player_BubbleKnob = m_Player.FindAction("BubbleKnob", throwIfNotFound: true);
+        m_Player_midiKnob = m_Player.FindAction("midiKnob", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -388,6 +598,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SpawnCar;
     private readonly InputAction m_Player_FireButton;
     private readonly InputAction m_Player_SwitchView;
+    private readonly InputAction m_Player_MusicKnob;
+    private readonly InputAction m_Player_RainSlider;
+    private readonly InputAction m_Player_RainKnob;
+    private readonly InputAction m_Player_WindKnob;
+    private readonly InputAction m_Player_RegionSlider;
+    private readonly InputAction m_Player_GoSea;
+    private readonly InputAction m_Player_GoCity;
+    private readonly InputAction m_Player_GoSky;
+    private readonly InputAction m_Player_BubbleKnob;
+    private readonly InputAction m_Player_midiKnob;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -403,6 +623,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @SpawnCar => m_Wrapper.m_Player_SpawnCar;
         public InputAction @FireButton => m_Wrapper.m_Player_FireButton;
         public InputAction @SwitchView => m_Wrapper.m_Player_SwitchView;
+        public InputAction @MusicKnob => m_Wrapper.m_Player_MusicKnob;
+        public InputAction @RainSlider => m_Wrapper.m_Player_RainSlider;
+        public InputAction @RainKnob => m_Wrapper.m_Player_RainKnob;
+        public InputAction @WindKnob => m_Wrapper.m_Player_WindKnob;
+        public InputAction @RegionSlider => m_Wrapper.m_Player_RegionSlider;
+        public InputAction @GoSea => m_Wrapper.m_Player_GoSea;
+        public InputAction @GoCity => m_Wrapper.m_Player_GoCity;
+        public InputAction @GoSky => m_Wrapper.m_Player_GoSky;
+        public InputAction @BubbleKnob => m_Wrapper.m_Player_BubbleKnob;
+        public InputAction @midiKnob => m_Wrapper.m_Player_midiKnob;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -445,6 +675,36 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchView.started += instance.OnSwitchView;
             @SwitchView.performed += instance.OnSwitchView;
             @SwitchView.canceled += instance.OnSwitchView;
+            @MusicKnob.started += instance.OnMusicKnob;
+            @MusicKnob.performed += instance.OnMusicKnob;
+            @MusicKnob.canceled += instance.OnMusicKnob;
+            @RainSlider.started += instance.OnRainSlider;
+            @RainSlider.performed += instance.OnRainSlider;
+            @RainSlider.canceled += instance.OnRainSlider;
+            @RainKnob.started += instance.OnRainKnob;
+            @RainKnob.performed += instance.OnRainKnob;
+            @RainKnob.canceled += instance.OnRainKnob;
+            @WindKnob.started += instance.OnWindKnob;
+            @WindKnob.performed += instance.OnWindKnob;
+            @WindKnob.canceled += instance.OnWindKnob;
+            @RegionSlider.started += instance.OnRegionSlider;
+            @RegionSlider.performed += instance.OnRegionSlider;
+            @RegionSlider.canceled += instance.OnRegionSlider;
+            @GoSea.started += instance.OnGoSea;
+            @GoSea.performed += instance.OnGoSea;
+            @GoSea.canceled += instance.OnGoSea;
+            @GoCity.started += instance.OnGoCity;
+            @GoCity.performed += instance.OnGoCity;
+            @GoCity.canceled += instance.OnGoCity;
+            @GoSky.started += instance.OnGoSky;
+            @GoSky.performed += instance.OnGoSky;
+            @GoSky.canceled += instance.OnGoSky;
+            @BubbleKnob.started += instance.OnBubbleKnob;
+            @BubbleKnob.performed += instance.OnBubbleKnob;
+            @BubbleKnob.canceled += instance.OnBubbleKnob;
+            @midiKnob.started += instance.OnMidiKnob;
+            @midiKnob.performed += instance.OnMidiKnob;
+            @midiKnob.canceled += instance.OnMidiKnob;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -482,6 +742,36 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchView.started -= instance.OnSwitchView;
             @SwitchView.performed -= instance.OnSwitchView;
             @SwitchView.canceled -= instance.OnSwitchView;
+            @MusicKnob.started -= instance.OnMusicKnob;
+            @MusicKnob.performed -= instance.OnMusicKnob;
+            @MusicKnob.canceled -= instance.OnMusicKnob;
+            @RainSlider.started -= instance.OnRainSlider;
+            @RainSlider.performed -= instance.OnRainSlider;
+            @RainSlider.canceled -= instance.OnRainSlider;
+            @RainKnob.started -= instance.OnRainKnob;
+            @RainKnob.performed -= instance.OnRainKnob;
+            @RainKnob.canceled -= instance.OnRainKnob;
+            @WindKnob.started -= instance.OnWindKnob;
+            @WindKnob.performed -= instance.OnWindKnob;
+            @WindKnob.canceled -= instance.OnWindKnob;
+            @RegionSlider.started -= instance.OnRegionSlider;
+            @RegionSlider.performed -= instance.OnRegionSlider;
+            @RegionSlider.canceled -= instance.OnRegionSlider;
+            @GoSea.started -= instance.OnGoSea;
+            @GoSea.performed -= instance.OnGoSea;
+            @GoSea.canceled -= instance.OnGoSea;
+            @GoCity.started -= instance.OnGoCity;
+            @GoCity.performed -= instance.OnGoCity;
+            @GoCity.canceled -= instance.OnGoCity;
+            @GoSky.started -= instance.OnGoSky;
+            @GoSky.performed -= instance.OnGoSky;
+            @GoSky.canceled -= instance.OnGoSky;
+            @BubbleKnob.started -= instance.OnBubbleKnob;
+            @BubbleKnob.performed -= instance.OnBubbleKnob;
+            @BubbleKnob.canceled -= instance.OnBubbleKnob;
+            @midiKnob.started -= instance.OnMidiKnob;
+            @midiKnob.performed -= instance.OnMidiKnob;
+            @midiKnob.canceled -= instance.OnMidiKnob;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -512,5 +802,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnSpawnCar(InputAction.CallbackContext context);
         void OnFireButton(InputAction.CallbackContext context);
         void OnSwitchView(InputAction.CallbackContext context);
+        void OnMusicKnob(InputAction.CallbackContext context);
+        void OnRainSlider(InputAction.CallbackContext context);
+        void OnRainKnob(InputAction.CallbackContext context);
+        void OnWindKnob(InputAction.CallbackContext context);
+        void OnRegionSlider(InputAction.CallbackContext context);
+        void OnGoSea(InputAction.CallbackContext context);
+        void OnGoCity(InputAction.CallbackContext context);
+        void OnGoSky(InputAction.CallbackContext context);
+        void OnBubbleKnob(InputAction.CallbackContext context);
+        void OnMidiKnob(InputAction.CallbackContext context);
     }
 }
