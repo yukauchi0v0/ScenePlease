@@ -48,19 +48,12 @@ public class FMOD_MasterController : MonoBehaviour
 
     void Start()
     {
-        if (carAmbienceEvent.IsNull)
-        {
-            Debug.LogWarning("Car Ambience Event 尚未指定！");
-        }
-        else
+        if (!carAmbienceEvent.IsNull)
         {
             carAmbienceInstance = RuntimeManager.CreateInstance(carAmbienceEvent);
-
-            // 初始化車聲參數，避免開場靜音
             carAmbienceInstance.setParameterByName("Traffic", 0.01f);
             carAmbienceInstance.setParameterByName("Train", 0.01f);
             carAmbienceInstance.setParameterByName("Event_Orientation", 0.01f);
-
             carAmbienceInstance.start();
         }
 
@@ -151,20 +144,12 @@ public class FMOD_MasterController : MonoBehaviour
     {
         GameObject[] cars = GameObject.FindGameObjectsWithTag(carTag);
         int carCount = cars.Length;
-
         float target = Mathf.Clamp01(carCount / carsToMaxDensity);
         currentDensity = Mathf.Lerp(currentDensity, target, Time.deltaTime * 2f);
 
-        Debug.Log($"Car Count: {carCount}, Traffic: {currentDensity}");
-
         if (carAmbienceInstance.isValid())
         {
-            var result = carAmbienceInstance.setParameterByName("Traffic", currentDensity);
-            Debug.Log($"設置 Traffic 結果: {result}");
-        }
-        else
-        {
-            Debug.LogWarning("🚨 carAmbienceInstance is NOT valid!");
+            carAmbienceInstance.setParameterByName("Traffic", currentDensity);
         }
     }
 

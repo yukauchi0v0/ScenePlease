@@ -21,6 +21,10 @@ public class FireworkManager : MonoBehaviour
     public float soundDelay = 0.2f;
     private AudioSource audioSource;
 
+    [Header("高度調整")]
+    [Tooltip("施放高度偏移（加在原本的隨機 Y 高度上）")]
+    public float heightOffset = 0f;
+
     void Awake()
     {
         midiKnob.Enable();
@@ -61,7 +65,7 @@ public class FireworkManager : MonoBehaviour
         Vector3 behindDirection = -player.forward;
         Vector3 randomOffset = new Vector3(
             Random.Range(-1f, 1f),
-            Random.Range(0.5f, 2f),
+            Random.Range(0.5f, 2f) + heightOffset,
             Random.Range(0.5f, 1.5f)
         );
         Vector3 spawnPos = player.position + behindDirection * spawnRadius + randomOffset;

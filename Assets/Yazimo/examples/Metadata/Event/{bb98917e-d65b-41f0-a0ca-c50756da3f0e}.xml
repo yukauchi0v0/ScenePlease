@@ -985,7 +985,7 @@ https://wingless-seraph.net</value>
 			<value>1</value>
 		</property>
 		<property name="value">
-			<value>2.45000076</value>
+			<value>-3</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{e2664a61-f1bb-40a1-9812-9db7605274af}">
@@ -993,7 +993,7 @@ https://wingless-seraph.net</value>
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-26.4999981</value>
+			<value>-36</value>
 		</property>
 		<property name="curveShape">
 			<value>0.5</value>
@@ -1061,7 +1061,7 @@ https://wingless-seraph.net</value>
 			<value>0.5</value>
 		</property>
 		<property name="value">
-			<value>0</value>
+			<value>-4.5</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{cc3fb3d9-237f-49a8-860a-b1033b3c25e0}">

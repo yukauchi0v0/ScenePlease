@@ -2040,7 +2040,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -3781453697727661768}
   cacheVersion: 131847
-  cacheTime: 638844122944717827
+  cacheTime: 638844185363535436
   SerializableEventsDict:
   - key: snapshot:/Slow-Motion
     index: 0
@@ -4354,7 +4354,7 @@ MonoBehaviour:
   Path: Assets/Yazimo/examples/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638844122944717827
+  lastModified: 638844185363535436
   FileSizes:
   - Name: Desktop
     Value: 21436704
