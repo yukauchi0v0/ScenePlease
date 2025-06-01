@@ -39,14 +39,21 @@ public class CarSpawner : MonoBehaviour
     void OnDisable() => controls.Disable();
 
     void Start()
-    {
-        mainCam = Camera.main;
+{
+    mainCam = Camera.main;
 
-        if (allLanes.Count == 0)
+    if (allLanes.Count == 0)
+    {
+        foreach (var lane in FindObjectsOfType<CarLane>())
         {
-            allLanes.AddRange(FindObjectsOfType<CarLane>());
+            if (lane.CompareTag("CityLane"))
+            {
+                allLanes.Add(lane);
+            }
         }
     }
+}
+
 
     void Update()
     {

@@ -233,6 +233,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""wallaKnob"",
+                    ""type"": ""Value"",
+                    ""id"": ""72bd47bc-8b3e-4255-af0a-8e02043aef5f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -532,6 +541,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""BirdSwitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6efd7e70-bbf6-473d-966e-2b53520542f0"",
+                    ""path"": ""<MidiDevice>/control005"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""wallaKnob"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -563,6 +583,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_midiKnob = m_Player.FindAction("midiKnob", throwIfNotFound: true);
         m_Player_FlyBoost = m_Player.FindAction("FlyBoost", throwIfNotFound: true);
         m_Player_BirdSwitch = m_Player.FindAction("BirdSwitch", throwIfNotFound: true);
+        m_Player_wallaKnob = m_Player.FindAction("wallaKnob", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -652,6 +673,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_midiKnob;
     private readonly InputAction m_Player_FlyBoost;
     private readonly InputAction m_Player_BirdSwitch;
+    private readonly InputAction m_Player_wallaKnob;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -679,6 +701,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @midiKnob => m_Wrapper.m_Player_midiKnob;
         public InputAction @FlyBoost => m_Wrapper.m_Player_FlyBoost;
         public InputAction @BirdSwitch => m_Wrapper.m_Player_BirdSwitch;
+        public InputAction @wallaKnob => m_Wrapper.m_Player_wallaKnob;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -757,6 +780,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @BirdSwitch.started += instance.OnBirdSwitch;
             @BirdSwitch.performed += instance.OnBirdSwitch;
             @BirdSwitch.canceled += instance.OnBirdSwitch;
+            @wallaKnob.started += instance.OnWallaKnob;
+            @wallaKnob.performed += instance.OnWallaKnob;
+            @wallaKnob.canceled += instance.OnWallaKnob;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -830,6 +856,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @BirdSwitch.started -= instance.OnBirdSwitch;
             @BirdSwitch.performed -= instance.OnBirdSwitch;
             @BirdSwitch.canceled -= instance.OnBirdSwitch;
+            @wallaKnob.started -= instance.OnWallaKnob;
+            @wallaKnob.performed -= instance.OnWallaKnob;
+            @wallaKnob.canceled -= instance.OnWallaKnob;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -872,5 +901,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMidiKnob(InputAction.CallbackContext context);
         void OnFlyBoost(InputAction.CallbackContext context);
         void OnBirdSwitch(InputAction.CallbackContext context);
+        void OnWallaKnob(InputAction.CallbackContext context);
     }
 }

@@ -211,6 +211,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "wallaKnob",
+                    "type": "Value",
+                    "id": "72bd47bc-8b3e-4255-af0a-8e02043aef5f",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -508,6 +517,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "BirdSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6efd7e70-bbf6-473d-966e-2b53520542f0",
+                    "path": "<MidiDevice>/control005",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "wallaKnob",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

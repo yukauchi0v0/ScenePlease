@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Car
   - Fish
+  - CityLane
+  - SubmarineLane
   layers:
   - Default
   - TransparentFX

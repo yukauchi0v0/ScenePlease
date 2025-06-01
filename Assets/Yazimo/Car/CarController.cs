@@ -31,8 +31,6 @@ public class CarController : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPoint, speed * Time.deltaTime);
 
         lifetime += Time.deltaTime;
-
-        // ❗只有在保護時間過後才判斷是否該刪除
         if (lifetime > deleteProtectTime && IsRendererCompletelyOffscreen())
         {
             Destroy(gameObject);

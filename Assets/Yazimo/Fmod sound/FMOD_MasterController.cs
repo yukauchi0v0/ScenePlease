@@ -7,11 +7,11 @@ public class FMOD_MasterController : MonoBehaviour
 {
     [Header("=== 雨聲控制 ===")]
     public StudioEventEmitter rainEmitter;
-    public InputAction rainKnob; // ⬅ 改用 Input System
+    public InputAction rainKnob;
 
     [Header("=== 風聲控制 ===")]
     public StudioEventEmitter windEmitter;
-    public InputAction windKnob; // ⬅ 改用 Input System
+    public InputAction windKnob;
 
     [Header("=== 車流控制 ===")]
     public EventReference carAmbienceEvent;
@@ -51,11 +51,21 @@ public class FMOD_MasterController : MonoBehaviour
         if (carAmbienceEvent.IsNull)
         {
             Debug.LogWarning("Car Ambience Event 尚未指定！");
-            return;
+        }
+        else
+        {
+            carAmbienceInstance = RuntimeManager.CreateInstance(carAmbienceEvent);
+
+            // 初始化車聲參數，避免開場靜音
+            carAmbienceInstance.setParameterByName("Traffic", 0.01f);
+            carAmbienceInstance.setParameterByName("Train", 0.01f);
+            carAmbienceInstance.setParameterByName("Event_Orientation", 0.01f);
+
+            carAmbienceInstance.start();
         }
 
-        carAmbienceInstance = RuntimeManager.CreateInstance(carAmbienceEvent);
-        carAmbienceInstance.start();
+        if (rainEmitter != null) rainEmitter.Play();
+        if (windEmitter != null) windEmitter.Play();
     }
 
     void Update()
@@ -79,7 +89,7 @@ public class FMOD_MasterController : MonoBehaviour
 
     void UpdateWindControl()
     {
-        if (windEmitter == null || playerTransform == null) return;
+        if (windEmitter == null || Camera.main == null) return;
 
         float current = windKnob.ReadValue<float>();
 
@@ -90,7 +100,7 @@ public class FMOD_MasterController : MonoBehaviour
         }
 
         bool knobMoved = Mathf.Abs(current - lastWind) > 0.001f;
-        float y = playerTransform.position.y;
+        float y = Camera.main.transform.position.y;
         float autoValue = Mathf.Clamp01(Mathf.InverseLerp(minHeight, maxHeight, y));
         float finalValue;
 
@@ -139,13 +149,23 @@ public class FMOD_MasterController : MonoBehaviour
 
     void UpdateCarDensity()
     {
-        if (!carAmbienceInstance.isValid()) return;
-
         GameObject[] cars = GameObject.FindGameObjectsWithTag(carTag);
         int carCount = cars.Length;
+
         float target = Mathf.Clamp01(carCount / carsToMaxDensity);
         currentDensity = Mathf.Lerp(currentDensity, target, Time.deltaTime * 2f);
-        carAmbienceInstance.setParameterByName("Traffic", currentDensity);
+
+        Debug.Log($"Car Count: {carCount}, Traffic: {currentDensity}");
+
+        if (carAmbienceInstance.isValid())
+        {
+            var result = carAmbienceInstance.setParameterByName("Traffic", currentDensity);
+            Debug.Log($"設置 Traffic 結果: {result}");
+        }
+        else
+        {
+            Debug.LogWarning("🚨 carAmbienceInstance is NOT valid!");
+        }
     }
 
     void OnDestroy()
