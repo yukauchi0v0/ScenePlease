@@ -215,6 +215,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FlyBoost"",
+                    ""type"": ""Value"",
+                    ""id"": ""ccb30e79-47d0-4557-b923-8b6a56aa4e8c"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""BirdSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""8d56ed47-0541-47a0-8ca0-80f9fb8d86a1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -492,6 +510,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""midiKnob"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb624253-ca5d-4cd7-a7f1-2016fc830d6e"",
+                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FlyBoost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e492c70-3cfd-4d60-a2f0-c1288ddeb947"",
+                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BirdSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -521,6 +561,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_GoSky = m_Player.FindAction("GoSky", throwIfNotFound: true);
         m_Player_BubbleKnob = m_Player.FindAction("BubbleKnob", throwIfNotFound: true);
         m_Player_midiKnob = m_Player.FindAction("midiKnob", throwIfNotFound: true);
+        m_Player_FlyBoost = m_Player.FindAction("FlyBoost", throwIfNotFound: true);
+        m_Player_BirdSwitch = m_Player.FindAction("BirdSwitch", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -608,6 +650,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_GoSky;
     private readonly InputAction m_Player_BubbleKnob;
     private readonly InputAction m_Player_midiKnob;
+    private readonly InputAction m_Player_FlyBoost;
+    private readonly InputAction m_Player_BirdSwitch;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -633,6 +677,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @GoSky => m_Wrapper.m_Player_GoSky;
         public InputAction @BubbleKnob => m_Wrapper.m_Player_BubbleKnob;
         public InputAction @midiKnob => m_Wrapper.m_Player_midiKnob;
+        public InputAction @FlyBoost => m_Wrapper.m_Player_FlyBoost;
+        public InputAction @BirdSwitch => m_Wrapper.m_Player_BirdSwitch;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -705,6 +751,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @midiKnob.started += instance.OnMidiKnob;
             @midiKnob.performed += instance.OnMidiKnob;
             @midiKnob.canceled += instance.OnMidiKnob;
+            @FlyBoost.started += instance.OnFlyBoost;
+            @FlyBoost.performed += instance.OnFlyBoost;
+            @FlyBoost.canceled += instance.OnFlyBoost;
+            @BirdSwitch.started += instance.OnBirdSwitch;
+            @BirdSwitch.performed += instance.OnBirdSwitch;
+            @BirdSwitch.canceled += instance.OnBirdSwitch;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -772,6 +824,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @midiKnob.started -= instance.OnMidiKnob;
             @midiKnob.performed -= instance.OnMidiKnob;
             @midiKnob.canceled -= instance.OnMidiKnob;
+            @FlyBoost.started -= instance.OnFlyBoost;
+            @FlyBoost.performed -= instance.OnFlyBoost;
+            @FlyBoost.canceled -= instance.OnFlyBoost;
+            @BirdSwitch.started -= instance.OnBirdSwitch;
+            @BirdSwitch.performed -= instance.OnBirdSwitch;
+            @BirdSwitch.canceled -= instance.OnBirdSwitch;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -812,5 +870,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnGoSky(InputAction.CallbackContext context);
         void OnBubbleKnob(InputAction.CallbackContext context);
         void OnMidiKnob(InputAction.CallbackContext context);
+        void OnFlyBoost(InputAction.CallbackContext context);
+        void OnBirdSwitch(InputAction.CallbackContext context);
     }
 }

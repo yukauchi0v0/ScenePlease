@@ -193,6 +193,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "FlyBoost",
+                    "type": "Value",
+                    "id": "ccb30e79-47d0-4557-b923-8b6a56aa4e8c",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "BirdSwitch",
+                    "type": "Button",
+                    "id": "8d56ed47-0541-47a0-8ca0-80f9fb8d86a1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -468,6 +486,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "midiKnob",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb624253-ca5d-4cd7-a7f1-2016fc830d6e",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FlyBoost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e492c70-3cfd-4d60-a2f0-c1288ddeb947",
+                    "path": "<XInputController>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BirdSwitch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
