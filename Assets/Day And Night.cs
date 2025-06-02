@@ -1,23 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using MidiJack;
 
 public class OptimizedDayNightController : MonoBehaviour
 {
+    public TimeControlInput input;
+
     [Header("漸變控制")]
     [SerializeField] private float transitionSpeed = 1.5f;
-    [SerializeField] private bool useSliderControl = true;
     [SerializeField] private float dayDurationInSeconds = 60f;
 
-    [Header("滑桿偵測設定")]
-    [SerializeField] private int midiKnobIndex = 0;
-    [SerializeField] private float valueThreshold = 0.01f;
+    [Header("MIDI 控制滑桿啟用")]
+    [SerializeField] private bool midiToggleEnabled = true; // 是否開啟 MIDI 切換功能
+    [SerializeField] private float sliderToggleThreshold = 0.5f; // 超過這個值就視為開啟滑桿控制
 
-    [Header("快捷鍵 MIDI Note（S/M/R）")]
-    [SerializeField] private int noteDay = 32;    // S 鍵
-    [SerializeField] private int noteDusk = 48;   // M 鍵
-    [SerializeField] private int noteNight = 64;  // R 鍵
+    [Header("快捷鍵對應時間點")]
+    [SerializeField] private float dayTimeValue = 0.1f;
+    [SerializeField] private float duskTimeValue = 0.55f;
+    [SerializeField] private float nightTimeValue = 0.85f;
 
     [Header("光線與顏色")]
     [SerializeField] private Light directionalLight;
@@ -28,47 +26,82 @@ public class OptimizedDayNightController : MonoBehaviour
     [SerializeField] private Gradient skyboxTintGradient;
 
     private float currentTime = 0f;
-    private float targetTime = 0f;
-    private float lastKnobValue = -1f;
+    private float manualTargetTime = 0f;
+
+    private enum ControlMode
+    {
+        Auto,
+        Slider,
+        ManualLerp
+    }
+
+    private ControlMode mode = ControlMode.Auto;
+
+    void Start()
+    {
+        manualTargetTime = currentTime;
+    }
 
     void Update()
     {
-        // 快捷鍵控制（優先於滑桿）
-        if (MidiMaster.GetKeyDown(noteDay))
-        {
-            targetTime = 0.0f;  // 白天
-        }
-        else if (MidiMaster.GetKeyDown(noteDusk))
-        {
-            targetTime = 0.45f; // 黃昏
-        }
-        else if (MidiMaster.GetKeyDown(noteNight))
-        {
-            targetTime = 0.85f; // 夜晚
-        }
-        else if (useSliderControl)
-        {
-            float knobValue = MidiMaster.GetKnob(midiKnobIndex);
+        if (input == null) return;
 
-            // 若滑桿變化幅度太小，就不更新
-            if (Mathf.Abs(knobValue - lastKnobValue) > valueThreshold)
-            {
-                targetTime = knobValue;  // 0~1 直接代表一天的時間
-                lastKnobValue = knobValue;
-            }
-        }
-        else
+        // MIDI 開關：控制是否使用滑桿模式
+        bool useSliderControl = midiToggleEnabled && input.sliderToggleValue > sliderToggleThreshold;
+
+        // 快捷鍵輸入：指定目標時間，並轉為手動漸變
+        if (input.setDay)
         {
-            // 自動時間流動模式
-            targetTime += Time.deltaTime / dayDurationInSeconds;
-            targetTime = Mathf.Repeat(targetTime, 1f);
+            manualTargetTime = dayTimeValue;
+            mode = ControlMode.ManualLerp;
+        }
+        else if (input.setDusk)
+        {
+            manualTargetTime = duskTimeValue;
+            mode = ControlMode.ManualLerp;
+        }
+        else if (input.setNight)
+        {
+            manualTargetTime = nightTimeValue;
+            mode = ControlMode.ManualLerp;
         }
 
-        // 平滑追趕 targetTime
-        currentTime = Mathf.Lerp(currentTime, targetTime, Time.deltaTime * transitionSpeed);
+        // 決定控制模式
+        if (useSliderControl)
+        {
+            mode = ControlMode.Slider;
+        }
+        else if (mode != ControlMode.ManualLerp)
+        {
+            mode = ControlMode.Auto;
+        }
+
+        // 根據模式設定目標時間
+        switch (mode)
+        {
+            case ControlMode.Auto:
+                manualTargetTime += Time.deltaTime / dayDurationInSeconds;
+                manualTargetTime = Mathf.Repeat(manualTargetTime, 1f);
+                break;
+
+            case ControlMode.Slider:
+                manualTargetTime = Mathf.Clamp01(input.sliderValue);
+                break;
+
+            case ControlMode.ManualLerp:
+                if (Mathf.Abs(currentTime - manualTargetTime) < 0.005f)
+                {
+                    mode = ControlMode.Auto;
+                }
+                break;
+        }
+
+        // 漸變靠近目標時間
+        currentTime = Mathf.Lerp(currentTime, manualTargetTime, Time.deltaTime * transitionSpeed);
 
         UpdateLighting(currentTime);
         RotateSkybox();
+        input.ResetFlags();
     }
 
     void UpdateLighting(float time)
@@ -91,7 +124,6 @@ public class OptimizedDayNightController : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        // 重設 Skybox 顏色，避免關閉後保持夜晚
         skyboxMaterial.SetColor("_Tint", new Color(0.5f, 0.5f, 0.5f));
     }
 }

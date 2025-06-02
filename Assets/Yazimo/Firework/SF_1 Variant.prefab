@@ -13,6 +13,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3425026211840218638, guid: 40a08865e12e93d4a8954444c54c525a, type: 3}
+      propertyPath: stopAction
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425026211840218638, guid: 40a08865e12e93d4a8954444c54c525a, type: 3}
       propertyPath: lengthInSec
       value: 2
       objectReference: {fileID: 0}
@@ -242,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharedProfile: {fileID: 11400000, guid: 46e1c9353d7884847bd733b11970b876, type: 2}
-  isGlobal: 0
+  isGlobal: 1
   blendDistance: 0
-  weight: 1
+  weight: 0.067
   priority: 0

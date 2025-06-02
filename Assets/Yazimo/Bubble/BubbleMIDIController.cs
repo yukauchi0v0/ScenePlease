@@ -1,14 +1,14 @@
 using UnityEngine;
-using MidiJack;
+using UnityEngine.InputSystem;
 
-public class BubbleMIDIController : MonoBehaviour
+public class BubbleInputSystemController : MonoBehaviour
 {
     [Header("要控制的粒子系統（左右）")]
     public ParticleSystem leftBubble;
     public ParticleSystem rightBubble;
 
-    [Header("MIDI 控制編號")]
-    public int knobIndex = 0; // 控制總強度的滑桿（0 = 無氣泡，1 = 爆量）
+    [Header("Input System MIDI 滑桿 Action")]
+    public InputAction bubbleKnob;
 
     [Header("速度範圍 (Start Speed)")]
     public float minSpeed = 0f;
@@ -32,6 +32,9 @@ public class BubbleMIDIController : MonoBehaviour
     private ParticleSystem.MainModule rightMain;
     private ParticleSystem.EmissionModule rightEmission;
 
+    void OnEnable() => bubbleKnob.Enable();
+    void OnDisable() => bubbleKnob.Disable();
+
     void Start()
     {
         if (leftBubble != null)
@@ -49,7 +52,7 @@ public class BubbleMIDIController : MonoBehaviour
 
     void Update()
     {
-        float midiValue = MidiMaster.GetKnob(knobIndex); // 0 ~ 1
+        float midiValue = bubbleKnob.ReadValue<float>(); // 0 ~ 1
 
         float mappedSpeed = Mathf.Lerp(minSpeed, maxSpeed, midiValue);
         float mappedRate = Mathf.Lerp(minRate, maxRate, midiValue);

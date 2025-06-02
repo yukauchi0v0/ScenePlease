@@ -1,12 +1,12 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using FMODUnity;
 using FMOD.Studio;
-using MidiJack;
 
-public class RainMidiControl_Customizable : MonoBehaviour
+public class RainSliderInputSystem : MonoBehaviour
 {
-    [Header("MIDI 滑桿控制")]
-    public int knobIndex = 0;
+    [Header("Input System MIDI 滑桿 Action")]
+    public InputAction rainKnob;
 
     [Header("雨粒子系統")]
     public ParticleSystem rainSystem;
@@ -37,9 +37,12 @@ public class RainMidiControl_Customizable : MonoBehaviour
     public int midMaxParticles = 2000;
     public int maxMaxParticles = 5000;
 
+    void OnEnable() => rainKnob.Enable();
+    void OnDisable() => rainKnob.Disable();
+
     void Update()
     {
-        float input = MidiMaster.GetKnob(knobIndex);
+        float input = rainKnob.ReadValue<float>();
 
         // 插值分段（0~0.5 = 小雨~中雨，0.5~1 = 中雨~大雨）
         float rate = input < 0.5f

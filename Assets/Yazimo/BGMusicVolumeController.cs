@@ -1,13 +1,13 @@
 using UnityEngine;
-using MidiJack;
+using UnityEngine.InputSystem;
 
 public class BGMusicVolumeController : MonoBehaviour
 {
     [Header("控制的音樂來源（可留空，自動尋找）")]
     public AudioSource bgmSource;
 
-    [Header("MIDI 旋鈕 Index")]
-    public int knobIndex = 0;
+    [Header("Input System MIDI 旋鈕 Action")]
+    public InputAction musicKnob;
 
     [Header("音量倍率 (可選)")]
     [Range(0f, 2f)] public float volumeMultiplier = 1f;
@@ -28,6 +28,9 @@ public class BGMusicVolumeController : MonoBehaviour
     private float currentVolume = 0f;
     private float updateTimer = 0f;
     private bool midiStarted = false;
+
+    void OnEnable() => musicKnob.Enable();
+    void OnDisable() => musicKnob.Disable();
 
     void Start()
     {
@@ -53,13 +56,12 @@ public class BGMusicVolumeController : MonoBehaviour
             targetVolume = defaultStartVolume;
             currentVolume = defaultStartVolume;
             bgmSource.volume = defaultStartVolume;
-            Debug.Log($"初始化音量：{defaultStartVolume}");
         }
     }
 
     void Update()
     {
-        if (bgmSource == null) return;
+        if (bgmSource == null || musicKnob == null) return;
 
         updateTimer += Time.deltaTime;
 
@@ -67,10 +69,9 @@ public class BGMusicVolumeController : MonoBehaviour
         {
             updateTimer = 0f;
 
-            float knobValue = MidiMaster.GetKnob(knobIndex);
+            float knobValue = musicKnob.ReadValue<float>();
             float newVolume = Mathf.Clamp01(knobValue * volumeMultiplier);
 
-            // 如果 MIDI 開始送值，而且變動夠大，就改變 targetVolume
             if (newVolume > 0.001f && Mathf.Abs(newVolume - targetVolume) > threshold)
             {
                 targetVolume = newVolume;
@@ -78,7 +79,6 @@ public class BGMusicVolumeController : MonoBehaviour
             }
         }
 
-        // 漸變音量
         currentVolume = Mathf.Lerp(currentVolume, targetVolume, lerpSpeed * Time.deltaTime);
         bgmSource.volume = currentVolume;
     }
