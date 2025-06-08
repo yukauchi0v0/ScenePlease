@@ -8,6 +8,8 @@ TagManager:
   - Fish
   - CityLane
   - SubmarineLane
+  - Tree
+  - Bird
   layers:
   - Default
   - TransparentFX

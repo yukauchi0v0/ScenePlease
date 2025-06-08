@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("初始化位置")]
     public Vector3 resetPosition = new Vector3(-107.81f, 2.23f, 165.8f);
 
+    [Header("角色圖像子物件")]
+    public SpriteRenderer spriteRenderer; // 💡記得手動拖入角色圖片
+
     private float currentSpeed;
     private PlayerControls controls;
     private Vector2 gamepadMoveInput = Vector2.zero;
@@ -42,11 +45,11 @@ public class PlayerMovement : MonoBehaviour
         bool isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         float keyboardTargetSpeed = isSprinting ? maxSpeed : minSpeed;
 
-        // 計算輸入強度（左搖桿 + 右搖桿Y）
+        // 計算輸入強度
         float gamepadInputMagnitude = new Vector3(gamepadMoveInput.x, gamepadVerticalInput, gamepadMoveInput.y).magnitude;
         float gamepadTargetSpeed = Mathf.Lerp(minSpeed, maxSpeed, gamepadInputMagnitude);
 
-        // 最終目標速度：依照是否為手柄輸入
+        // 最終目標速度
         float targetSpeed = (Gamepad.current != null) ? gamepadTargetSpeed : keyboardTargetSpeed;
 
         // 平滑加速
@@ -59,15 +62,23 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.R)) y = 1f;
         if (Input.GetKey(KeyCode.F)) y = -1f;
 
-        // 合併輸入
+        // 合併輸入方向
         Vector3 moveDir = new Vector3(
             h + gamepadMoveInput.x,
             y + gamepadVerticalInput,
             v + gamepadMoveInput.y
         );
 
+        // 移動角色（空物件）
         transform.Translate(moveDir.normalized * currentSpeed * Time.deltaTime, Space.World);
 
+        // 🔁 翻轉子物件圖像（SpriteRenderer）
+        if (moveDir.x > 0.01f)
+            spriteRenderer.flipX = false;  // 朝右
+        else if (moveDir.x < -0.01f)
+            spriteRenderer.flipX = true;   // 朝左
+
+        // 位置重置
         if (Input.GetKeyDown(KeyCode.X))
         {
             transform.position = resetPosition;

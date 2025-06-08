@@ -1,12 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class StreetLightManager : MonoBehaviour
+public class LightManager : MonoBehaviour
 {
-    public InputAction midiKnob; // MIDI 控制滑桿，綁定 <MidiDevice>/control*/value
-    public StreetLightUnit[] streetLights; // 自動找或手動指定皆可
+    public InputAction midiKnob;
 
-    [Header("MIDI 數值對應的最大亮度")]
+    [Header("路燈")]
+    public StreetLightUnit[] streetLights;
+
+    [Header("水晶燈")]
+    public CrystalLightUnit[] crystalLights;
+
     public float maxBrightness = 1f;
 
     void OnEnable()
@@ -19,22 +23,25 @@ public class StreetLightManager : MonoBehaviour
         midiKnob.Disable();
     }
 
+    void Start()
+    {
+        // 自動找場景中的所有物件
+        streetLights = FindObjectsOfType<StreetLightUnit>();
+        crystalLights = FindObjectsOfType<CrystalLightUnit>();
+    }
+
     void Update()
     {
-        float value = midiKnob.ReadValue<float>(); // 0 ~ 1
-
-        float brightness = Mathf.Clamp01(value) * maxBrightness;
+        float value = Mathf.Clamp01(midiKnob.ReadValue<float>()) * maxBrightness;
 
         foreach (var light in streetLights)
         {
-            if (light != null)
-                light.SetBrightness(brightness);
+            if (light != null) light.SetBrightness(value);
         }
-    }
 
-    // 開場自動抓場景裡所有燈
-    void Start()
-    {
-        streetLights = FindObjectsOfType<StreetLightUnit>();
+        foreach (var crystal in crystalLights)
+        {
+            if (crystal != null) crystal.SetBrightness(value);
+        }
     }
 }

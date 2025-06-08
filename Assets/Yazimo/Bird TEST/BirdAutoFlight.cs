@@ -18,10 +18,12 @@ public class BirdAutoFlight : MonoBehaviour
     private Vector3 targetPoint;
     private float changeTimer;
     private Vector3 baseY;
+    private Vector3 initialPosition;
 
     void Start()
     {
         baseY = transform.position;
+        initialPosition = transform.position;
         PickNewTarget();
     }
 
@@ -61,5 +63,13 @@ public class BirdAutoFlight : MonoBehaviour
         targetPoint = newTarget;
 
         changeTimer = directionChangeInterval;
+    }
+
+    // ✅ 外部呼叫：重置位置並重新開始巡航
+    public void ResetToStartPoint()
+    {
+        transform.position = initialPosition;
+        baseY = initialPosition;
+        PickNewTarget();
     }
 }

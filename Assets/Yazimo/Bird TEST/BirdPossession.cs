@@ -21,9 +21,9 @@ public class BirdControlSwitcher : MonoBehaviour
     public float birdFollowSpeed = 12f;
 
     [Header("切換限制設定")]
-    public Camera mainCamera; // ⬅️ 拖入主攝影機
-    public bool requireInView = true;   // ⬅️ 啟用這個條件
-    public float minVisibleTime = 0.3f; // ⬅️ 至少要持續看到這麼久
+    public Camera mainCamera;
+    public bool requireInView = true;
+    public float minVisibleTime = 0.3f;
 
     private float visibleTimer = 0f;
     private Vector3 savedOffset;
@@ -60,7 +60,6 @@ public class BirdControlSwitcher : MonoBehaviour
 
     void Update()
     {
-        // 可選：如果你希望顯示 UI 提示（鳥在視野內）
         if (requireInView && mainCamera != null)
         {
             if (IsBirdVisible())
@@ -94,33 +93,37 @@ public class BirdControlSwitcher : MonoBehaviour
         if (cameraFollow == null) return;
 
         if (toBird)
-{
-    // 原有設定
-    savedOffset = cameraFollow.offset;
-    savedTarget = cameraFollow.target;
-    savedSpeed = cameraFollow.followSpeed;
+        {
+            savedOffset = cameraFollow.offset;
+            savedTarget = cameraFollow.target;
+            savedSpeed = cameraFollow.followSpeed;
 
-    cameraFollow.target = bird;
-    cameraFollow.offset = birdCamOffset;
-    cameraFollow.followSpeed = birdFollowSpeed;
+            cameraFollow.target = bird;
+            cameraFollow.offset = birdCamOffset;
+            cameraFollow.followSpeed = birdFollowSpeed;
+            cameraFollow.useCompensation = true;
+            cameraFollow.EnableFollow(true);
 
-    // ✅ 啟用補償
-    cameraFollow.useCompensation = true;
+            FadePlayer(false); // 淡出角色
+        }
+        else
+        {
+            player.position = bird.position;
 
-    cameraFollow.EnableFollow(true);
-}
-else
-{
-    cameraFollow.target = savedTarget;
-    cameraFollow.offset = savedOffset;
-    cameraFollow.followSpeed = defaultFollowSpeed;
+            cameraFollow.target = savedTarget;
+            cameraFollow.offset = savedOffset;
+            cameraFollow.followSpeed = defaultFollowSpeed;
+            cameraFollow.useCompensation = false;
+            cameraFollow.EnableFollow(true);
 
-    // ✅ 關閉補償
-    cameraFollow.useCompensation = false;
+            FadePlayer(true); // 淡入角色
 
-    cameraFollow.EnableFollow(true);
-}
-
+            // ✅ 呼叫：讓鳥回去原本滑翔邏輯
+            if (birdAuto != null)
+            {
+                birdAuto.ResetToStartPoint();
+            }
+        }
 
         if (playerMovement != null)
             playerMovement.isMovementEnabled = !toBird;
@@ -130,5 +133,50 @@ else
 
         if (birdAuto != null)
             birdAuto.enabled = !toBird;
+    }
+
+    void FadePlayer(bool visible)
+    {
+        StopAllCoroutines();
+        StartCoroutine(FadeCoroutine(visible));
+    }
+
+    System.Collections.IEnumerator FadeCoroutine(bool fadeIn)
+    {
+        float duration = 0.5f;
+        float elapsed = 0f;
+        var renderers = player.GetComponentsInChildren<SpriteRenderer>();
+
+        float startAlpha = fadeIn ? 0f : 1f;
+        float endAlpha = fadeIn ? 1f : 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float currentAlpha = Mathf.Lerp(startAlpha, endAlpha, t);
+
+            foreach (var r in renderers)
+            {
+                if (r != null)
+                {
+                    Color c = r.color;
+                    c.a = currentAlpha;
+                    r.color = c;
+                }
+            }
+
+            yield return null;
+        }
+
+        foreach (var r in renderers)
+        {
+            if (r != null)
+            {
+                Color c = r.color;
+                c.a = endAlpha;
+                r.color = c;
+            }
+        }
     }
 }
