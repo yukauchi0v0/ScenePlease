@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading; // ⚠️ 在 Unity 中通常不需要用到 Threading，請小心使用
-using UnityEditor.Experimental.GraphView; // ⚠️ 這是編輯器專用命名空間，不建議在執行時腳本中使用
 using UnityEngine;
 
 public class ObjectGenerator : MonoBehaviour
