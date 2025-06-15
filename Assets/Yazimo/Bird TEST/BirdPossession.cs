@@ -118,18 +118,19 @@ public class BirdControlSwitcher : MonoBehaviour
 
             FadePlayer(true); // 淡入角色
 
-            // ✅ 呼叫：讓鳥回去原本滑翔邏輯
             if (birdAuto != null)
-            {
                 birdAuto.ResetToStartPoint();
-            }
         }
 
+        // 控制狀態切換
         if (playerMovement != null)
             playerMovement.isMovementEnabled = !toBird;
 
         if (birdFlight != null)
+        {
             birdFlight.enabled = toBird;
+            birdFlight.isPlayerControlling = toBird; // ⭐ 關鍵：只有在鳥被控制時才接受輸入
+        }
 
         if (birdAuto != null)
             birdAuto.enabled = !toBird;

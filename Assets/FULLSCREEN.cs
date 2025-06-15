@@ -13,7 +13,7 @@ using UnityEngine;
 /// <remarks>
 /// Confirmed to work in Unity 2019 and 2020. May work in earlier and later versions. No promises.
 /// </remarks>
-public static class FullscreenGameView
+public static class FULLSCREEN
 {
     static readonly Type GameViewType = Type.GetType("UnityEditor.GameView,UnityEditor");
     static readonly PropertyInfo ShowToolbarProperty = GameViewType.GetProperty("showToolbar", BindingFlags.Instance | BindingFlags.NonPublic);

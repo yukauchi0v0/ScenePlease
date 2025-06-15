@@ -18,6 +18,9 @@ public class BirdFlightControllerV2 : MonoBehaviour
     public float maxRollAngle = 30f;
     public float rollSmooth = 4f;
 
+    [Header("是否玩家控制中")]
+    public bool isPlayerControlling = false;
+
     private Vector2 moveInput;
     private float verticalInput = 0f;
     [HideInInspector] public float boostAmount = 0f;
@@ -39,7 +42,7 @@ public class BirdFlightControllerV2 : MonoBehaviour
         controls.Player.VerticalMove.canceled += ctx => verticalInput = 0f;
 
         controls.Player.FlyBoost.performed += ctx => boostAmount = ctx.ReadValue<float>();
-        controls.Player.FlyBoost.canceled  += ctx => boostAmount = 0f;
+        controls.Player.FlyBoost.canceled += ctx => boostAmount = 0f;
     }
 
     void OnEnable() => controls.Enable();
@@ -52,46 +55,40 @@ public class BirdFlightControllerV2 : MonoBehaviour
 
     void Update()
     {
+        if (!isPlayerControlling) return; // 🔴 加這句就能阻止非控制時操作
+
         // 1. 移動輸入方向
         Vector3 inputDir = new Vector3(moveInput.x, verticalInput, moveInput.y);
         bool hasInput = inputDir.sqrMagnitude > 0.01f;
 
-                if (hasInput)
+        if (hasInput)
         {
             Vector3 flatForward = transform.forward;
             flatForward.y = 0f;
             flatForward.Normalize();
 
-            // 限制 Y 軸仰角與俯角
-            float clampedY = Mathf.Clamp(inputDir.y, -0.7f, 0.6f); // -1 垂直向下，+1 垂直向上
+            float clampedY = Mathf.Clamp(inputDir.y, -0.7f, 0.6f);
             Vector3 adjustedDir = new Vector3(inputDir.x, clampedY, inputDir.z).normalized;
-
             currentForward = adjustedDir;
         }
 
-
-        // 2. 計算角度差並動態調整轉向速度與壓彎
         float angleDiff = Vector3.Angle(transform.forward, currentForward);
         float dynamicTurnSpeed = Mathf.Lerp(rotationSmooth, rotationSmooth * 4f, angleDiff / 90f);
 
-        // 3. 平滑轉向
         Quaternion targetRot = Quaternion.LookRotation(currentForward);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, dynamicTurnSpeed * Time.deltaTime);
 
-        // 4. 飛行速度
         float targetSpeed = Mathf.Lerp(glideSpeed, boostSpeed, boostAmount);
         Vector3 moveVector = transform.forward * targetSpeed;
         currentVelocity = Vector3.Lerp(currentVelocity, moveVector, acceleration * Time.deltaTime);
         transform.position += currentVelocity * Time.deltaTime;
 
-        // 5. 動畫速度
         if (animator != null)
         {
             animator.Play("Scene");
             animator.speed = Mathf.Lerp(glideAnimSpeed, boostAnimSpeed, boostAmount);
         }
 
-        // 6. 壓彎傾斜（X軸保留仰角、Z軸壓彎）
         float targetRoll = -moveInput.x * Mathf.Lerp(maxRollAngle, maxRollAngle * 1.8f, angleDiff / 90f);
         float currentZ = transform.localEulerAngles.z;
         if (currentZ > 180f) currentZ -= 360f;
